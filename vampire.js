@@ -51,6 +51,54 @@ class Vampire {
   hasSameCreator(vampire) {
     return this.creator === vampire.creator;
   }
+
+
+  vampireWithName(name) {
+    // console.log("visiting : ", this.name);
+    // console.log("looking for : ", name);
+    let foundVampire = null;
+    // let currentVampire = this;
+    if (this.name === name) {
+      foundVampire = this;
+      // console.log("current vampire: ", currentVampire.name);
+      // console.log("updating found Vampire");
+      // console.log("found vampire: ", foundVampire.name);
+      return foundVampire;
+    } else {
+      // console.log("line before for-loop");
+      for (const offspring of this.offspring) {
+        foundVampire = foundVampire || offspring.vampireWithName(name);
+      }
+    }
+    // console.log("before final return: ", foundVampire);
+    return foundVampire;
+  }
+
+  // Returns the total number of vampires that exist
+  get totalDescendents() {
+    let descendents = 0;
+    descendents += this.numberOfOffspring;
+    for (const offspring of this.offspring) {
+      descendents += offspring.totalDescendents;
+    }
+
+    return descendents;
+  }
+
+  // Returns an array of all the vampires that were converted after 1980
+  get allMillennialVampires() {
+    let filteredVampire = [];
+
+    if (this.yearConverted > 1900) {
+      filteredVampire.push(this);
+    }
+    for (const offspring of this.offspring) {
+      filteredVampire = filteredVampire.concat(offspring.allMillennialVampires);
+    }
+    return filteredVampire;
+
+  }
+
   /** Stretch **/
 
   // Returns the closest common ancestor of two vampires.
@@ -59,6 +107,7 @@ class Vampire {
   // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
   closestCommonAncestor(vampire) {
+
     if (!this.creator || !vampire.creator) {
       return rootVampire;
     }
@@ -91,6 +140,7 @@ class Vampire {
       return ("didn't catch anything");
     }
 
+
     // if (vamp1Line < vamp2Line) {
     //   let currentVampire = vampire;
     //   if (currentVampire.creator) {
@@ -109,8 +159,9 @@ class Vampire {
 
 module.exports = Vampire;
 let rootVampire = new Vampire("root");
-let offspring1 = new Vampire("a");
-let offspring2 = new Vampire("b");
+
+let offspring1 = new Vampire("andrew");
+let offspring2 = new Vampire("sarah");
 let offspring3 = new Vampire("c");
 let offspring4 = new Vampire("d");
 let offspring5 = new Vampire("e");
